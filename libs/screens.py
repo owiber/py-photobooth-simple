@@ -60,6 +60,8 @@ SELECT_FORMAT_HOME_TIMEOUT_SECONDS = 30
 COUNTDOWN_HOME_TIMEOUT_SECONDS = 30
 CONFIRM_CAPTURE_HOME_TIMEOUT_SECONDS = 30
 
+GALLERY_URL = "http://192.168.50.248:5000"
+
 def hex_to_rgba(hex_color):
     hex_color = hex_color.lstrip('#')
     return (
@@ -2575,7 +2577,8 @@ class ReviewScreen(ColorScreen):
         Logger.info('ReviewScreen: home_event().')
         self._stop_home_timeout()
         self._save_collage()
-        self.app.transition_to(ScreenMgr.SUCCESS)
+        # self.app.transition_to(ScreenMgr.SUCCESS)
+        self.app.transition_to(ScreenMgr.START)
 
     def retake_event(self, obj):
         if obj is not None and not isinstance(obj.last_touch, MouseMotionEvent): return
@@ -2872,7 +2875,8 @@ class QRCodePopup(FloatLayout):
     def _build_qr_png(cls):
         import qrcode
 
-        wifi_qr_data = "WIFI:T:nopass;S:PhotoBooth;P:;H:false;;"
+        # wifi_qr_data = "WIFI:T:nopass;S:PhotoBooth;P:;H:false;;"
+        wifi_qr_data = GALLERY_URL
 
         qr = qrcode.QRCode(
             version=1,
@@ -2941,7 +2945,7 @@ class QRCodePopup(FloatLayout):
         self.card.add_widget(self.qr_image)
 
         hint_label = ResizeLabel(
-            text=self._t('qr.hint', 'Go to http://192.168.4.1'),
+            text=self._t('qr.hint', f"Go to {GALLERY_URL}"),
             size_hint=(1, 0.08),
             wh_fraction=0.022,
             bold=True,
