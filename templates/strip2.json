@@ -1,35 +1,35 @@
 {
-  "name": "Plain Photo Strip",
+  "background": null,
   "description": "Three photos strip format",
+  "duplicate_horizontal": true,
+  "foreground": "",
+  "name": "Plain Photo Strip",
   "page": {
-    "width": 600,
-    "height": 1800
+    "height": 1800,
+    "width": 600
   },
   "photos": [
     {
-      "x": 30,
-      "y": 180,
+      "height": 520,
       "width": 540,
-      "height": 390
+      "x": 30,
+      "y": 30
     },
     {
-      "x": 30,
-      "y": 660,
+      "height": 520,
       "width": 540,
-      "height": 390
+      "x": 30,
+      "y": 583
     },
     {
-      "x": 30,
-      "y": 1110,
+      "height": 520,
       "width": 540,
-      "height": 390
+      "x": 30,
+      "y": 1135
     }
   ],
-  "background": null,
-  "foreground":"",
   "print_params": {
     "PageSize": "w288h432-div2",
     "print-scaling": "fit"
-  },
-  "duplicate_horizontal": true
+  }
 }
