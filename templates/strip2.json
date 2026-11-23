@@ -1,0 +1,35 @@
+{
+  "name": "Plain Photo Strip",
+  "description": "Three photos strip format",
+  "page": {
+    "width": 600,
+    "height": 1800
+  },
+  "photos": [
+    {
+      "x": 30,
+      "y": 180,
+      "width": 540,
+      "height": 390
+    },
+    {
+      "x": 30,
+      "y": 660,
+      "width": 540,
+      "height": 390
+    },
+    {
+      "x": 30,
+      "y": 1110,
+      "width": 540,
+      "height": 390
+    }
+  ],
+  "background": null,
+  "foreground":"",
+  "print_params": {
+    "PageSize": "w288h432-div2",
+    "print-scaling": "fit"
+  },
+  "duplicate_horizontal": true
+}
