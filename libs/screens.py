@@ -759,7 +759,7 @@ class SelectFormatScreen(ColorScreen):
         
         # Grid for format cards (centered)
         self.cards_grid = GridLayout(
-            cols=3,
+            cols=4,
             spacing=Window.height * 0.033,
             padding=Window.height * 0.022,
             size_hint=(None, None),
@@ -777,7 +777,7 @@ class SelectFormatScreen(ColorScreen):
 
         # Build format cards
         self.format_cards = []
-        max_cards = min(3, len(self.app.print_formats))
+        max_cards = min(4, len(self.app.print_formats))
         for format_idx in range(max_cards):
             card = self._create_format_card(format_idx)
             self.cards_grid.add_widget(card)
@@ -800,13 +800,14 @@ class SelectFormatScreen(ColorScreen):
         aspect = Window.width / Window.height  # <1 portrait, ~1 square, >1 landscape
 
         # Choose columns: 1 in portrait, 2 in square, 3 in landscape
-        if aspect < 0.75:
-            cols = 1
-        elif aspect < 1.2:
-            cols = 2
-        else:
-            cols = 3
-        cols = min(cols, n_cards)
+        # if aspect < 0.75:
+        #     cols = 1
+        # elif aspect < 1.2:
+        #     cols = 2
+        # else:
+        #     cols = 3
+        # cols = min(cols, n_cards)
+        cols = 4
 
         # Width from horizontal space
         n_spacings = max(cols - 1, 0)
