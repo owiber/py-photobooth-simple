@@ -3,7 +3,7 @@
   "description": "Three photos strip format",
   "duplicate_horizontal": true,
   "foreground": "",
-  "name": "Photo Strip (Plain)",
+  "name": "Strip (Plain)",
   "page": {
     "height": 1800,
     "width": 600
