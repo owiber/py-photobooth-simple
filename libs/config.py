@@ -46,7 +46,7 @@ class Config:
         return self._get_boolean(('Global',), 'RINGLED', fallback=False)
 
     def get_admin_password(self):
-        password = self._get_string(('Global',), 'ADMIN_PASSWORD', fallback='').strip()
+        password = self._get_string(('Global',), 'ADMIN_PASSWORD_MD5', fallback='').strip()
         return password if password and password.upper() != 'NONE' else None
 
     def get_language(self):

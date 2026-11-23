@@ -1,4 +1,5 @@
 import configparser
+import hashlib
 import hmac
 import io
 import json
@@ -102,7 +103,7 @@ class WebServer:
                 {'section': 'Global', 'option': 'SHARE', 'label': 'Share buttons', 'control': 'checkbox', 'help': 'Display web sharing actions in the booth interface.'},
                 {'section': 'Global', 'option': 'RINGLED', 'label': 'Ring LED', 'control': 'checkbox', 'help': 'Enable the SPI ring light hardware.'},
                 {'section': 'Global', 'option': 'LANGUAGE', 'label': 'Language', 'control': 'select', 'choices': (('fr', 'Français'), ('en', 'English')), 'help': 'Choose the UI language used by the PhotoBooth application.'},
-                {'section': 'Global', 'option': 'ADMIN_PASSWORD', 'label': 'Admin password', 'control': 'password', 'placeholder': 'Leave blank to keep current password', 'help': 'Enter a new password, or type None to disable admin login.'},
+                {'section': 'Global', 'option': 'ADMIN_PASSWORD_MD5', 'label': 'Admin password MD5', 'control': 'password', 'placeholder': 'Leave blank to keep current password', 'help': 'Enter a new password, or type None to disable admin login.'},
             ),
         },
         {
@@ -561,7 +562,7 @@ class WebServer:
         if control == 'checkbox':
             return value.lower() in ('1', 'true', 'yes', 'on')
 
-        if field_spec['option'] == 'ADMIN_PASSWORD':
+        if field_spec['option'] == 'ADMIN_PASSWORD_MD5':
             return ''
 
         if field_spec.get('number_type') == 'optional_int' and value.upper() == 'NONE':
@@ -691,7 +692,7 @@ class WebServer:
         option = field_spec['option']
         number_type = field_spec.get('number_type')
 
-        if option == 'ADMIN_PASSWORD':
+        if option == 'ADMIN_PASSWORD_MD5':
             return current_value if value == '' else value
 
         if option == 'TEXT_COLOR':
@@ -868,7 +869,8 @@ class WebServer:
         if self.admin_password is None:
             return False
 
-        return hmac.compare_digest((password or '').strip(), self.admin_password)
+        md5 = hashlib.md5(password.encode("utf-8")).hexdigest()
+        return hmac.compare_digest((md5 or '').strip(), self.admin_password)
 
     def _is_admin_authenticated(self):
         """Return True when current session is authenticated."""
@@ -884,7 +886,7 @@ class WebServer:
     def _refresh_admin_password_from_config(self, content):
         """Refresh in-memory admin password from config text."""
         self.admin_password = None
-        password_match = re.search(r'^\s*ADMIN_PASSWORD\s*=\s*(.*?)\s*$', content, re.MULTILINE)
+        password_match = re.search(r'^\s*ADMIN_PASSWORD_MD5\s*=\s*(.*?)\s*$', content, re.MULTILINE)
         if not password_match:
             return
 
@@ -1228,7 +1230,7 @@ class WebServer:
         def admin_login():
             """Authenticate admin user."""
             if self.admin_password is None:
-                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD in config.ini.'), 403
+                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD_MD5 in config.ini.'), 403
 
             provided_password = request.form.get('password') or ''
             if not self._is_admin_password_valid(provided_password):
@@ -1254,7 +1256,7 @@ class WebServer:
 
             if self.admin_password is None:
                 session.clear()
-                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD in config.ini.'), 403
+                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD_MD5 in config.ini.'), 403
 
             confirmation_password = request.form.get(self.DELETE_ALL_PASSWORD_FIELD) or ''
             if not self._is_admin_password_valid(confirmation_password):
@@ -1276,7 +1278,7 @@ class WebServer:
 
             if self.admin_password is None:
                 session.clear()
-                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD in config.ini.'), 403
+                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD_MD5 in config.ini.'), 403
 
             submitted_form_values = {}
 
@@ -1327,7 +1329,7 @@ class WebServer:
 
             if self.admin_password is None:
                 session.clear()
-                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD in config.ini.'), 403
+                return self._render_admin_login_page(error_message='Admin access is disabled. Configure ADMIN_PASSWORD_MD5 in config.ini.'), 403
 
             if not callable(self.restart_callback):
                 return self._render_admin_page(error_message='Restart callback is unavailable.'), 500
